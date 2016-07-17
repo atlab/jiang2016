@@ -1,5 +1,16 @@
-# jiang2016
-Slice cutting simulation for Jiang et al. 2016
+# Analysis code for Jiang et al. 2016
+
+This repository contains the code for the simulation of the effect of slice cutting on the measured connection probability matrix as published by Jiang et al. 2015.
+
+To run this code you need python (with numpy, scipy, and pandas) and [datajoint](http://github.com/datajoint/datajoint-python).
+
+We provide a Docker image with all dependencies installed under `atlab/jiang2016`. To run the container you need the database credentials that can be requested via email.
+We will then send you a file called `dj_local_conf.json`. With that file you can run the container via
+
+ ```
+ docker run -p 8888:8888 -v $(PWD)/dj_local_conf.json:/jiang2016/dj_local_conf.json atlab/jiang2016
+ ```
+
 
 
 # Licenses
