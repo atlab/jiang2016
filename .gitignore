@@ -87,3 +87,5 @@ ENV/
 
 # Rope project settings
 .ropeproject
+.idea
+dj_local_conf.json
