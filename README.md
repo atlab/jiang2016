@@ -11,7 +11,7 @@ We will then send you a file called `dj_local_conf.json`. With that file you can
  docker run -p 8888:8888 -v $(PWD)/dj_local_conf.json:/jiang2016/dj_local_conf.json atlab/jiang2016
  ```
 
-
+After that a jupyter notebook server should be available from your browser under `localhost:8888`.
 
 # Licenses
 
