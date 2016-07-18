@@ -305,11 +305,6 @@ class OverlapGroup(dj.Computed):
         Q.columns = ['post', 'pre', 'p']
         Q = Q.set_index(['post', 'pre'])
 
-        # D0 = gr.agg({'p': lambda x: np.mean(x, axis=0).sum() * 2})
-        # D = gr.agg({'p': lambda x: np.mean(x, axis=0)[1:].sum()})
-        # Q = 1 - D / D0
-
-        # Q = 1 - gr.agg({'p': q})
         print('<b> +- std(b)', (1 / Q).mean(), (1 / Q).std())
         labels = ['L1 SBC-like', 'L1 eNGC', 'L23 MC', 'L23 NGC', 'L23 BTC', 'L23 BPC', 'L23 DBC', 'L23 BC', 'L23 ChC',
                   'L23 Pyr', 'L5 MC', 'L5 NGC', 'L5 BC', 'L5 SC', 'L5 HEC', 'L5 DC', 'L5 Pyr']
