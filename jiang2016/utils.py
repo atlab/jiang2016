@@ -123,7 +123,7 @@ def plot_projections(X, Y, delta, param1, param2):
     fig, ax = plt.subplots(1, 3, figsize=(12, 4), dpi=400, sharey=True, sharex=True)
 
     ax_labels = dict(
-        enumerate([r'x (medial-lateral) [$\mu$m]', r'y (perpendicular to cut) [$\mu$m]', r'z (depth) [$\mu$m]']))
+        enumerate([r'x (posterior-anterior) [$\mu$m]', r'y (perpendicular to cut) [$\mu$m]', r'z (cortical depth) [$\mu$m]']))
     for k, (i, j) in enumerate(itertools.combinations([0, 1, 2], r=2)):
         ax[k].plot(X[:, i], X[:, j], '.', ms=.5, **param1)
         ax[k].plot(Y[:, i], Y[:, j], '.', ms=.5, **param2)

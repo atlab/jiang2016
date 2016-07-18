@@ -184,7 +184,7 @@ class OverlapGroup(dj.Computed):
     ---
     """
 
-    save_control_figures = True
+    save_control_figures = False
 
     @property
     def key_source(self):
@@ -281,14 +281,12 @@ class OverlapGroup(dj.Computed):
             key['d'] = y[idx]
             part.insert1(key)
 
-    def plot_correction(self, filename, density_param_id=1, cut_distance=15):
+    def plot_correction(self, filename, density_param_id=1, cut_distance=15, plot_q=False):
         rel_correction = (self.OrthoOverlapDensity() & dict(density_param_id=density_param_id)) \
-                         * CellNameTranslation().proj(cell_type_from='xiaolong_new', pre='paper', un1='shan', un2='xiaolong') \
-                         * CellNameTranslation().proj(cell_type_to='xiaolong_new', post='paper',
-                                         un3 = 'shan', un4 = 'xiaolong')
-        rel_prob = PaperConnectivity() * CellNameTranslation().proj(cell_type_from='xiaolong', pre='paper',
-                                                                    un1='shan', un2='xiaolong_new') \
-                   * CellNameTranslation().proj(cell_type_to='xiaolong', post='paper', un3='shan', un4='xiaolong_new')
+                         * CellNameTranslation().proj(cell_type_from='xiaolong_new', pre='paper', un1 = 'shan', un2 = 'xiaolong') \
+                         * CellNameTranslation().proj(cell_type_to='xiaolong_new', post='paper',  un3 = 'shan', un4 = 'xiaolong')
+        rel_prob = PaperConnectivity() * CellNameTranslation().proj(cell_type_from='xiaolong', pre='paper', un1='shan', un2='xiaolong_new') \
+                                       * CellNameTranslation().proj(cell_type_to='xiaolong', post='paper', un3='shan', un4='xiaolong_new')
 
         df_correction = pd.DataFrame(rel_correction.fetch())
         df_paper = pd.DataFrame(rel_prob.fetch())
@@ -306,9 +304,6 @@ class OverlapGroup(dj.Computed):
         Q = (1 - gr.apply(q)).reset_index()
         Q.columns = ['post', 'pre', 'p']
         Q = Q.set_index(['post', 'pre'])
-        # def q(X):
-        #     return np.mean(
-        #         [x[1:].sum() / 2 / x.sum() if x.sum() > 0 else 0 for x in X])  # TODO: replace 1: at some point
 
         # D0 = gr.agg({'p': lambda x: np.mean(x, axis=0).sum() * 2})
         # D = gr.agg({'p': lambda x: np.mean(x, axis=0)[1:].sum()})
@@ -321,10 +316,11 @@ class OverlapGroup(dj.Computed):
         P2 = (P / Q).fillna(0)
         P = P.unstack().loc[labels][list(product(['p'], labels))]
         P2 = P2.unstack().loc[labels][list(product(['p'], labels))]
+        Q2 = Q.unstack().loc[labels][list(product(['p'], labels))]
 
-        fig, axes = plot_connections(P, P2, vmax=1, cmin=0, cmax=1)
+        fig, axes = plot_connections(P, P2 if not plot_q else Q2, vmax=1, cmin=0, cmax=1)
         axes['matrix'][0].set_title('uncorrected', fontsize=6)
-        axes['matrix'][1].set_title('corrected', fontsize=6)
+        axes['matrix'][1].set_title('corrected' if not plot_q else '1/(correction factor)', fontsize=6)
         fig.tight_layout()
 
         p2 = df_paper.merge((1 / Q).reset_index(), on=['post', 'pre'], suffixes=('_prop', '_correction'))
